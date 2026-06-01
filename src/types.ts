@@ -8,6 +8,14 @@ export interface Post {
   theme: string; // "warm" | "light" | "dark" | "sepia" | "forest" | "sky"
   langBadge: string;
   aspectRatio: string; // "auto" | "square" | "video"
+  // Campi social opzionali
+  socialStyle?: "instagram" | "facebook" | "twitter" | "tiktok" | "standard";
+  authorName?: string;
+  authorHandle?: string;
+  authorAvatar?: string; // base64, URL o colore
+  likesCount?: number;
+  commentsCount?: number;
+  sharesCount?: number;
 }
 
 export interface PostResponse {

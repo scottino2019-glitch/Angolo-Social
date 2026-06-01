@@ -15,7 +15,13 @@ const DEFAULT_POST: Post = {
   createdAt: new Date().toISOString(),
   theme: "editorial",
   langBadge: "In Evidenza",
-  aspectRatio: "auto"
+  aspectRatio: "auto",
+  socialStyle: "instagram",
+  authorName: "Scuola di Lingua Roma",
+  authorHandle: "lingua_roma",
+  likesCount: 142,
+  commentsCount: 28,
+  sharesCount: 12
 };
 
 export default function App() {
@@ -23,7 +29,7 @@ export default function App() {
   const [hasDefaultPassword, setHasDefaultPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const [showAdmin, setShowAdmin] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(true);
 
   // Parse embed parameter from the URL query params
   const [isEmbed, setIsEmbed] = useState(false);
