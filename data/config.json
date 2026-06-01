@@ -1,0 +1,14 @@
+{
+  "password": "admin",
+  "post": {
+    "title": "Un Caffè a Roma ☕",
+    "text": "Benvenuti nel nostro Angolo Sociale! Questo è un angolo speciale dedicato a tutti gli studenti di lingua.\n\nDa qui puoi caricare istantanee dei tuoi eventi, foto storiche della scuola o pillole video personali con spiegazioni veloci dei vocaboli quotidiani.\n\nSuggerimento del giorno:\nClicca su 'Accedi' in basso o sul bottone 'Admin' in alto per sbloccare il pannello d'amministrazione (la password di fabbrica è 'admin') e carica il tuo primo post reale!",
+    "mediaType": "none",
+    "mediaUrl": "",
+    "mediaName": "",
+    "createdAt": "2026-06-01T20:25:00.000Z",
+    "theme": "editorial",
+    "langBadge": "In Evidenza",
+    "aspectRatio": "auto"
+  }
+}
