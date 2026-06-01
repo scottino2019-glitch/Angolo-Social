@@ -1,0 +1,6 @@
+{
+  "name": "Angolo Sociale",
+  "description": "Un widget sociale semplice ed elegante per incorporare post (foto o video e descrizione) nei tuoi siti di lingua tramite iframe.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
