@@ -92,6 +92,19 @@ export default function AdminPanel({ currentPost, onPostUpdated, onClose, appUrl
     sharesCount
   ]);
 
+  // Clean up object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (filePreview && filePreview.startsWith("blob:")) {
+        try {
+          URL.revokeObjectURL(filePreview);
+        } catch (e) {
+          console.error("Error cleaning up blob URL:", e);
+        }
+      }
+    };
+  }, [filePreview]);
+
   // Create a real-time preview post object matching current admin fields state
   const previewPost: Post = {
     title,
@@ -218,18 +231,40 @@ export default function AdminPanel({ currentPost, onPostUpdated, onClose, appUrl
       return;
     }
 
+    // Revoke previous blob URL to prevent memory leaks
+    if (filePreview && filePreview.startsWith("blob:")) {
+      try {
+        URL.revokeObjectURL(filePreview);
+      } catch (err) {
+        console.warn("Could not revoke object URL:", err);
+      }
+    }
+
     setSelectedFile(file);
 
+    // Create custom lightweight blob pointer URL for instant preview rendering
+    const objectUrl = URL.createObjectURL(file);
+    setFilePreview(objectUrl);
+
+    // Convert to base64 in background ONLY to construct self-contained JSON download
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result as string;
       setMediaBase64(base64String);
-      setFilePreview(base64String);
     };
     reader.readAsDataURL(file);
   };
 
   const handleMediaTypeChange = (type: "none" | "image" | "video") => {
+    // Revoke previous blob URL to prevent memory leaks
+    if (filePreview && filePreview.startsWith("blob:")) {
+      try {
+        URL.revokeObjectURL(filePreview);
+      } catch (err) {
+        console.warn("Could not revoke object URL:", err);
+      }
+    }
+
     setMediaType(type);
     if (type === "none") {
       setFilePreview("");
@@ -252,8 +287,9 @@ export default function AdminPanel({ currentPost, onPostUpdated, onClose, appUrl
         title,
         text,
         mediaType,
-        // Save base64 string directly as mediaUrl so it remains self-contained
-        mediaUrl: mediaBase64 || filePreview || "",
+        // CRITICAL: We pass the lightweight filePreview (which contains the current blob url or standard asset URL) 
+        // to active App states to prevent browser thread-lock & standard storage quota failures.
+        mediaUrl: filePreview || "",
         mediaName: selectedFile ? selectedFile.name : currentPost.mediaName || "",
         theme: selectedTheme,
         langBadge,
@@ -267,7 +303,7 @@ export default function AdminPanel({ currentPost, onPostUpdated, onClose, appUrl
         sharesCount
       };
 
-      // Call onPostUpdated trigger to update App component's post state and write to localStorage
+      // Call onPostUpdated trigger to update App component's post state and write to localStorage safely
       onPostUpdated(localUpdatedPost);
 
       setSaveStatus({
