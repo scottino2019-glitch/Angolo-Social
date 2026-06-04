@@ -62,7 +62,11 @@ export default function App() {
           if (loadedPost && (loadedPost.title || loadedPost.text)) {
             setPost(loadedPost);
             setHasDefaultPassword(false);
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(loadedPost));
+            try {
+              localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(loadedPost));
+            } catch (storageErr) {
+              console.warn("Could not persist initial fetch to localStorage:", storageErr);
+            }
             setIsLoading(false);
             return;
           }
@@ -93,8 +97,12 @@ export default function App() {
 
   const handlePostUpdated = (newPost: Post) => {
     setPost(newPost);
-    // Instant save to localStorage so the user can see changes immediately
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newPost));
+    // Instant save to localStorage safely so storage quota issues don't crash the React context
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newPost));
+    } catch (storageErr) {
+      console.warn("Could not persist live updates to localStorage:", storageErr);
+    }
   };
 
   if (isLoading) {
